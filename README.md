@@ -6,7 +6,7 @@ About
 --------
 [I just found about about something interesting](http://www.pc-help.org/obscure.htm) and thought of making a generator of it.  I'm quite dumb, so if you are as dumb as me, I can try to explain what happens behind the scene.
 For example, let's use http://example.com/ as an example; if you click on it, of course it's going to redirect to the site, right? But what about this: http://1572395042@1572395042 
-And ,o, it's not just a 404 page.
+And no, it's not just a 404 page.
 
 If we the following dig command 
 
