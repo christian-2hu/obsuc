@@ -1,0 +1,50 @@
+#!/usr/bin/bash
+
+# Display help settings
+help() {
+    echo 'Usage: <command> [<url>]'
+    echo 'These are common commands used in various situations:'
+    echo '-d or --dword <url>    Transform given url in a dword'
+    echo '-o or --octal <url>    Transform given url in a base-8'
+    echo '-H or --hexa <url>     Transform given url in a base-16'
+}
+# Convert to a dword
+dword() {
+    IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
+    echo 'The IPV4 of '"$1"' is '"$IP" 
+    IP1=`echo ${IP} | tr "." " " | awk '{ print $1 }'`
+    IP2=`echo ${IP} | tr "." " " | awk '{ print $2 }'`
+    IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
+    IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
+    
+    # Calculating dword
+    RESULT=$(( IP1 * 256 + IP2))
+    RESULT2=$(( RESULT * 256 + IP3))
+    RESULT_FINAL=$(( RESULT2 * 256 + IP4))
+    echo 'Your dword is: '"$RESULT_FINAL"
+    echo 'You may use as you like, examples: '
+    echo 'http://instagram.com@'"$RESULT_FINAL"
+    echo 'http://facebook.com@'"$RESULT_FINAL"
+}
+# Checks if there's at least two parameters and exits in case there's less than two
+if [[ -z "$1" || -z "$2" ]]; then 
+    echo 'You need to give at least two parameters, use -h or --help for help.'
+    exit
+fi
+# ./this_script -h
+if [[ $1 == '--help' ||  $1 == '-h' ]]; then
+    help
+# ./this_script -d
+elif [[ $1 == '--dword' ||  $1 == '-d' ]]; then
+    echo 'Given URL is '"$2"', getting its IPV4!'
+    dword $2
+# ./this_script -0
+elif [[ $1 == '--octal' ||  $1 == '-o' ]]; then
+    echo 'octal'
+# ./this_script -H
+elif [[ $1 == '--hexa' ||  $1 == '-H' ]]; then
+    echo 'hexa'
+else
+    echo 'Command '"$1"' not found.'
+    help
+fi
