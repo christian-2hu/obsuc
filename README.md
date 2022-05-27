@@ -2,6 +2,32 @@ Obsuc
 --------
 Obsuc is just a script that obscures urls. It's nothing fancy, just some math behind and a terminal script; Although it doesn't work as expected these days, the concept is actually quite nice if you're studying a different language. I'll try to implement on at least two different languages just to gain more experience with it.
 
+Running
+--------
+Quite simple, just give it execute permission
+```console
+foo@bar:~$ chmod +x /path/to/obsuc
+```
+Run with --help or -h to get all parameters
+```console
+foo@bar:~$ /path/to/obsuc --help
+Usage: <command> [<url>]
+These are common commands used in various situations:
+-d or --dword <url>    Transform given url in a dword
+-o or --octal <url>    Transform given url in a base-8
+-H or --hexa <url>     Transform given url in a base-16
+You need to give at least two parameters, use -h or --help for help.
+```
+#### Example:
+```console
+foo@bar:~$ /path/to/obsuc -o example.com
+The IPV4 of example.com is 93.184.216.34
+Your octal is: 0135.0270.0330.042.
+You may use as you like, examples: 
+http://instagram.com@0135.0270.0330.042.
+http://0135.0270.0330.042.
+http://facebook.com@0135.0270.0330.042.
+```
 About
 --------
 [I just found about about something interesting](http://www.pc-help.org/obscure.htm) and thought of making a generator of it.  I'm quite dumb, so if you are as dumb as me, I can try to explain what happens behind the scene.
