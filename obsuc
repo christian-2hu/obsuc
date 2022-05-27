@@ -16,7 +16,6 @@ dword() {
     IP2=`echo ${IP} | tr "." " " | awk '{ print $2 }'`
     IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
     IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
-    
     # Calculating dword
     RESULT=$(( IP1 * 256 + IP2))
     RESULT2=$(( RESULT * 256 + IP3))
@@ -26,21 +25,58 @@ dword() {
     echo 'http://instagram.com@'"$RESULT_FINAL"
     echo 'http://facebook.com@'"$RESULT_FINAL"
 }
+base8() {
+    IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
+    echo 'The IPV4 of '"$1"' is '"$IP" 
+    IP1=`echo ${IP} | tr "." " " | awk '{ print $1 }'`
+    IP2=`echo ${IP} | tr "." " " | awk '{ print $2 }'`
+    IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
+    IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
+    # Put each part of ip address on an array
+    IPS=($IP1 $IP2 $IP3 $IP4)
+    # For each part of ips...
+    for ip in ${IPS[@]}; do
+        # ...convert it to an octal as ip value is decremented
+        while (($ip > 0))
+        do
+            # Single octal value
+            octal=$(expr $ip % 8)
+            # String concatenation
+            reversed+=$octal
+            # decrement counter by division
+            ((ip=ip/8))
+        done
+        # Revert done here when all octals are together
+        reversed=`echo $reversed | rev`
+        # Put it on result
+        result+='0'"$reversed"
+        # Clear contens of reversed
+        unset reversed
+        result+="."
+    done
+    echo 'Your octal is: '"$result"
+    echo 'You may use as you like, examples: '
+    echo 'http://instagram.com@'"$result"
+    echo 'http://'"$result"
+    echo 'http://facebook.com@'"$result"
+}
+
+# ./this_script -h
+if [[ $1 == '--help' ||  $1 == '-h' ]]; then
+    help
+fi
 # Checks if there's at least two parameters and exits in case there's less than two
 if [[ -z "$1" || -z "$2" ]]; then 
     echo 'You need to give at least two parameters, use -h or --help for help.'
     exit
 fi
-# ./this_script -h
-if [[ $1 == '--help' ||  $1 == '-h' ]]; then
-    help
 # ./this_script -d
-elif [[ $1 == '--dword' ||  $1 == '-d' ]]; then
+if [[ $1 == '--dword' ||  $1 == '-d' ]]; then
     echo 'Given URL is '"$2"', getting its IPV4!'
     dword $2
 # ./this_script -0
 elif [[ $1 == '--octal' ||  $1 == '-o' ]]; then
-    echo 'octal'
+    base8 $2
 # ./this_script -H
 elif [[ $1 == '--hexa' ||  $1 == '-H' ]]; then
     echo 'hexa'
