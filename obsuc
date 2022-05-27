@@ -17,13 +17,13 @@ dword() {
     IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
     IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
     # Calculating dword
-    RESULT=$(( IP1 * 256 + IP2))
-    RESULT2=$(( RESULT * 256 + IP3))
-    RESULT_FINAL=$(( RESULT2 * 256 + IP4))
-    echo 'Your dword is: '"$RESULT_FINAL"
+    RESULT=$(( $IP1 * 256 + $IP2))
+    RESULT=$(( $RESULT * 256 + $IP3))
+    RESULT=$(( $RESULT * 256 + $IP4))
+    echo 'Your dword is: '"$RESULT"
     echo 'You may use as you like, examples: '
-    echo 'http://instagram.com@'"$RESULT_FINAL"
-    echo 'http://facebook.com@'"$RESULT_FINAL"
+    echo 'http://instagram.com@'"$RESULT"
+    echo 'http://facebook.com@'"$RESULT"
 }
 base8() {
     IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
@@ -64,6 +64,7 @@ base8() {
 # ./this_script -h
 if [[ $1 == '--help' ||  $1 == '-h' ]]; then
     help
+    exit
 fi
 # Checks if there's at least two parameters and exits in case there's less than two
 if [[ -z "$1" || -z "$2" ]]; then 
