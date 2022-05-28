@@ -8,14 +8,21 @@ help() {
     echo '-o or --octal <url>    Transform given url in a base-8'
     echo '-H or --hexa <url>     Transform given url in a base-16'
 }
-# Convert to a dword
-dword() {
+# get ipv4 from given input
+getIP() {
     IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
     echo 'The IPV4 of '"$1"' is '"$IP" 
     IP1=`echo ${IP} | tr "." " " | awk '{ print $1 }'`
     IP2=`echo ${IP} | tr "." " " | awk '{ print $2 }'`
     IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
     IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
+    # Put each part of ip address on an array
+    IPS=($IP1 $IP2 $IP3 $IP4)
+}
+# Convert to a dword
+dword() {
+    # get ipv4
+    getIP $1
     # Calculating dword
     RESULT=$(( $IP1 * 256 + $IP2))
     RESULT=$(( $RESULT * 256 + $IP3))
@@ -27,14 +34,8 @@ dword() {
 }
 # Convert to an octal
 base8() {
-    IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
-    echo 'The IPV4 of '"$1"' is '"$IP" 
-    IP1=`echo ${IP} | tr "." " " | awk '{ print $1 }'`
-    IP2=`echo ${IP} | tr "." " " | awk '{ print $2 }'`
-    IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
-    IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
-    # Put each part of ip address on an array
-    IPS=($IP1 $IP2 $IP3 $IP4)
+    # get ipv4
+    getIP $1
     # For each part of ips...
     for ip in ${IPS[@]}; do
         # ...convert it to an octal as ip value is decremented
@@ -63,14 +64,8 @@ base8() {
 }
 # Convert to a hexadecimal number
 base16() {
-    IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
-    echo 'The IPV4 of '"$1"' is '"$IP" 
-    IP1=`echo ${IP} | tr "." " " | awk '{ print $1 }'`
-    IP2=`echo ${IP} | tr "." " " | awk '{ print $2 }'`
-    IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
-    IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
-    # Put each part of ip address on an array
-    IPS=($IP1 $IP2 $IP3 $IP4)
+    # get ipv4
+    getIP $1
     # For each part of ips...
     for ip in ${IPS[@]}; do
         # ...convert it to an hexadecimal as ip value is decremented
