@@ -25,6 +25,7 @@ dword() {
     echo 'http://instagram.com@'"$RESULT"
     echo 'http://facebook.com@'"$RESULT"
 }
+# Convert to an octal
 base8() {
     IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
     echo 'The IPV4 of '"$1"' is '"$IP" 
@@ -60,7 +61,67 @@ base8() {
     echo 'http://'"$result"
     echo 'http://facebook.com@'"$result"
 }
-
+# Convert to a hexadecimal number
+base16() {
+    IP=`nslookup $1 | grep -m1 "Address: " | cut --complement -d " " -f 1`
+    echo 'The IPV4 of '"$1"' is '"$IP" 
+    IP1=`echo ${IP} | tr "." " " | awk '{ print $1 }'`
+    IP2=`echo ${IP} | tr "." " " | awk '{ print $2 }'`
+    IP3=`echo ${IP} | tr "." " " | awk '{ print $3 }'`
+    IP4=`echo ${IP} | tr "." " " | awk '{ print $4 }'`
+    # Put each part of ip address on an array
+    IPS=($IP1 $IP2 $IP3 $IP4)
+    # For each part of ips...
+    for ip in ${IPS[@]}; do
+        # ...convert it to an hexadecimal as ip value is decremented
+        while (($ip > 0))
+        do
+            # Single octal hexadecimal
+            hexa=$(expr $ip % 16)
+            # Convert values to hexadecimal
+            case $hexa in
+            10)
+                hexa="A"
+                ;;
+            11)
+                hexa="B"
+                ;;
+            12)
+               hexa="C"
+                ;;
+            13)
+               hexa="D"
+                ;;
+            14)
+               hexa="E"
+                ;;
+            15)
+               hexa="F"
+                ;;
+            esac
+            # String concatenation
+            reversed+=$hexa
+            # decrement counter by division
+            ((ip=ip/16))
+        done
+        # Revert done here when all hexadecimals are together
+        reversed=`echo $reversed | rev`
+        # Put it on result
+        result+='0x'"$reversed"
+        # Result without 0x and points
+        result_with0x+=$reversed
+        # Clear contents of reversed
+        unset reversed
+        result+="."
+    done
+    echo 'Your hexadecimal is: '"$result"
+    echo 'You may use as you like, examples: '
+    echo 'http://instagram.com@'"$result"
+    echo 'http://facebook.com@'"$result"
+    echo 'http://'"$result"
+    echo 'The dots can be omitted and the entire hex number preceded by 0x:'
+    echo 'http://0x'"${result_with0x//./}"
+}
 # ./this_script -h
 if [[ $1 == '--help' ||  $1 == '-h' ]]; then
     help
@@ -80,7 +141,7 @@ elif [[ $1 == '--octal' ||  $1 == '-o' ]]; then
     base8 $2
 # ./this_script -H
 elif [[ $1 == '--hexa' ||  $1 == '-H' ]]; then
-    echo 'hexa'
+    base16 $2
 else
     echo 'Command '"$1"' not found.'
     help
